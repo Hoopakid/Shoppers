@@ -1,0 +1,183 @@
+{% load static %}
+{% load i18n %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Mukta:300,400,700">
+    <link rel="stylesheet" href="{% static 'fonts/icomoon/style.css' %}">
+    {% block css %}{% endblock %}
+
+
+  </head>
+  <body>
+  <div class="site-wrap">
+    <header class="site-navbar" role="banner">
+      <div class="site-navbar-top">
+        <div class="container">
+          <div class="row align-items-center">
+
+            <div class="col-6 col-md-4 order-2 order-md-1 site-search-icon text-left">
+              <form action="" class="site-block-top-search">
+                <span class="icon icon-search2"></span>
+                <input type="text" class="form-control border-0" placeholder="Search">
+              </form>
+            </div>
+
+            <div class="col-12 mb-3 mb-md-0 col-md-4 order-1 order-md-2 text-center">
+              <div class="site-logo">
+                <a href="/" class="js-logo-clone">Shoppers</a>
+              </div>
+            </div>
+
+            <div class="col-6 col-md-4 order-3 order-md-3 text-right">
+              <div class="site-top-icons">
+                <ul>
+                  <li><a href="#"><span class="icon icon-heart-o"></span></a></li>
+                  <li>
+                    <a href="/cart" class="site-cart">
+                      <span class="icon icon-shopping_cart"></span>
+                      <span class="count">2</span>
+                    </a>
+                  </li>
+                     <form action="{% url 'set_language' %}" method="post">
+                  {% csrf_token %}
+                  {% get_current_language as LANGUAGE_CODE %}
+                  {% get_available_languages as LANGUAGES %}
+                  {% get_language_info_list for LANGUAGES as languages %}
+                  <input type="hidden" name="next" value="{{ redirect_to }}"/>
+                  <select name="language" onchange="this.form.submit()">
+                      {% for language in languages %}
+                          <option value="{{ language.code }}" {% if language.code == LANGUAGE_CODE %}selected{% endif %}>
+                            {{ language.name_local }} {{ language.code  }}
+                          </option>
+                      {% endfor %}
+                  </select>
+              </form>
+                  <li class="d-inline-block d-md-none ml-md-0"><a href="#" class="site-menu-toggle js-menu-toggle"><span class="icon-menu"></span></a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <nav class="site-navigation text-right text-md-center" role="navigation">
+        <div class="container">
+          <ul class="site-menu js-clone-nav d-none d-md-block">
+              {% url 'home' as home %}
+              {% url 'about' as about %}
+              {% url 'shop' as shop %}
+              {% url 'contact' as contact %}
+              {% url 'add-product' as add_product %}
+            <li
+                {% if request.path == home %}
+                class="has-children active"
+                {% endif %}
+            >
+              <a href="/">{% translate 'Home' %}</a>
+            </li>
+            <li
+                {% if request.path == about %}
+                    class="has-children active"
+                {% endif %}
+            >
+              <a href="/about">{% translate 'About' %}</a>
+            </li>
+            <li
+                {% if request.path == shop %}
+                    class="has-children active"
+                {% endif %}
+            ><a href="/shop">{% translate 'Shop' %}</a></li>
+            <li
+                {% if request.path == contact %}
+                    class="has-children active"
+                {% endif %}
+            ><a href="/contact">{% translate 'Contact' %}</a></li>
+          {% if user.is_authenticated %}
+                <a class="has-children nav-item nav-link" href="/add-product">{% translate 'Add product' %}</a>
+                <a href="" class="nav-item nav-link ">{{ user.first_name }} {{ user.last_name }}</a>
+                <a href="/accounts/logout" class="nav-item nav-link">{% translate 'Log out' %}</a>
+          {% else %}
+                <li><a href="/accounts/login"><span class="icon icon-person"></span></a></li>
+          {% endif %}
+          </ul>
+        </div>
+      </nav>
+    </header>
+
+
+      {% block content %}{% endblock %}
+
+      <footer class="site-footer border-top">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-6 mb-5 mb-lg-0">
+            <div class="row">
+              <div class="col-md-12">
+                <h3 class="footer-heading mb-4">Navigations</h3>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <ul class="list-unstyled">
+                  <li><a href="#">Sell online</a></li>
+                  <li><a href="#">Features</a></li>
+                  <li><a href="#">Shopping cart</a></li>
+                  <li><a href="#">Store builder</a></li>
+                </ul>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <ul class="list-unstyled">
+                  <li><a href="#">Mobile commerce</a></li>
+                  <li><a href="#">Dropshipping</a></li>
+                  <li><a href="#">Website development</a></li>
+                </ul>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <ul class="list-unstyled">
+                  <li><a href="#">Point of sale</a></li>
+                  <li><a href="#">Hardware</a></li>
+                  <li><a href="#">Software</a></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6 col-lg-3 mb-4 mb-lg-0">
+            <h3 class="footer-heading mb-4">Promo</h3>
+            <a href="#" class="block-6">
+              <img src="{% static 'images/hero_1.jpg' %}" alt="Image placeholder" class="img-fluid rounded mb-4">
+              <h3 class="font-weight-light  mb-0">Finding Your Perfect Shoes</h3>
+              <p>Promo from  nuary 15 &mdash; 25, 2019</p>
+            </a>
+          </div>
+          <div class="col-md-6 col-lg-3">
+            <div class="block-5 mb-5">
+              <h3 class="footer-heading mb-4">Contact Info</h3>
+              <ul class="list-unstyled">
+                <li class="address">203 Fake St. Mountain View, San Francisco, California, USA</li>
+                <li class="phone"><a href="tel://23923929210">+2 392 3929 210</a></li>
+                <li class="email">emailaddress@domain.com</li>
+              </ul>
+            </div>
+
+            <div class="block-7">
+              <form action="#" method="post">
+                <label for="email_subscribe" class="footer-heading">Subscribe</label>
+                <div class="form-group">
+                  <input type="text" class="form-control py-4" id="email_subscribe" placeholder="Email">
+                  <input type="submit" class="btn btn-sm btn-primary" value="Send">
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+        <div class="row pt-5 mt-5 text-center">
+
+        </div>
+      </div>
+    </footer>
+    </div>
+    {% block js %}{% endblock %}
+  </body>
+</html>
