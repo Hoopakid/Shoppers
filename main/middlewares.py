@@ -10,7 +10,7 @@ class IPRestrictedMiddleware:
 
         ip_addresses = (
             '127.0.0.1',
-            '10.10.5.55'
+            '192.169.1.107'
         )
         if client_ip not in ip_addresses and 'admin' in request.path:
             return HttpResponseForbidden('Permission denied for you!')
